@@ -46,10 +46,6 @@ export default {
   },
 
   async mounted() {
-    await this.getData();
-
-    const el = document.getElementById("lightgallery");
-
     let LocalThumbWidth;
     let localThumbContHeight;
     if (document.documentElement.clientWidth > 760) {
@@ -59,36 +55,40 @@ export default {
       LocalThumbWidth = 100;
       localThumbContHeight = 124;
     }
+    const el = document.getElementById("lightgallery");
 
-    await window.lightGallery(el, {
-      autoplay: true,
-      pager: true,
-      galleryId: "nature",
-      thumbWidth: LocalThumbWidth,
-      thumbContHeight: localThumbContHeight,
-      thumbMargin: 20,
-      mobileSettings: {
-        controls: false,
-        showCloseIcon: false,
-        download: false,
-        rotate: false,
-      },
-    });
+    this.getData()
+      .then(() => {
+        window.lightGallery(el, {
+          autoplay: true,
+          pager: true,
+          galleryId: "nature",
+          thumbWidth: LocalThumbWidth,
+          thumbContHeight: localThumbContHeight,
+          thumbMargin: 20,
+          mobileSettings: {
+            controls: false,
+            showCloseIcon: false,
+            download: false,
+            rotate: false,
+          },
+        });
+        el.addEventListener("onBeforeSlide", (e) => {
+          this.setActiveSlide(e.detail.index);
+        });
 
-    let masonry = await new Masonry(el, {
-      itemSelector: ".lightgallery-item",
-      gutter: 30,
-      horizontalOrder: true,
-      fitWidth: true,
-    });
-
-    el.addEventListener("onBeforeSlide", (e) => {
-      this.setActiveSlide(e.detail.index);
-    });
-
-    el.addEventListener("onBeforeClose", () => {
-      this.resetActiveSlide();
-    });
+        el.addEventListener("onBeforeClose", () => {
+          this.resetActiveSlide();
+        });
+      })
+      .then(() => {
+        new Masonry(el, {
+          itemSelector: ".lightgallery-item",
+          gutter: 30,
+          horizontalOrder: true,
+          fitWidth: true,
+        });
+      });
   },
 
   computed: {
