@@ -52,8 +52,8 @@ export default {
       LocalThumbWidth = 150;
       localThumbContHeight = 176;
     } else {
-      LocalThumbWidth = 100;
       localThumbContHeight = 124;
+      LocalThumbWidth = 100;
     }
     const el = document.getElementById("lightgallery");
 
