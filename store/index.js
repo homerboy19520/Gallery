@@ -2,68 +2,47 @@ import axios from "axios";
 
 export const state = () => ({
   request: null,
-  name: "Artur",
-  data: {
-    photos: [
-      {
-        origin: "https://i.ibb.co/D1qCHPc/1.jpg",
-        is_private: false,
-      },
-      {
-        origin: "https://i.ibb.co/VWxT6RG/4.jpg",
-        is_private: false,
-      },
-      {
-        origin: "https://i.ibb.co/y6D9y4w/20.jpg",
-        is_private: false,
-      },
-      {
-        origin: "https://i.ibb.co/CmsJ6b1/23.jpg",
-        is_private: false,
-      },
-      {
-        origin: "https://i.ibb.co/881C5xY/Group-15.png",
-        is_private: true,
-      },
-      {
-        origin: "https://i.ibb.co/881C5xY/Group-15.png",
-        is_private: true,
-      },
-      {
-        origin: "https://i.ibb.co/881C5xY/Group-15.png",
-        is_private: true,
-      },
-    ],
-    videos: [
-      {
-        preview: "https://i.ibb.co/881C5xY/Group-15.png",
-        origin: "https://dev.rusdat.net/mock/3207126055.mp4",
-        is_private: true,
-      },
-    ],
-  },
+  dataGallery: [],
+  activeSlide: null,
 });
 export const getters = {
   name(state) {
     return state.name;
   },
-};
 
+  userData(state) {
+    if (state.dataGallery) {
+      return state.dataGallery;
+    }
+  },
+
+  isPrivateModal(state) {
+    if (state.activeSlide) {
+      return state.activeSlide.is_private;
+    } else return false;
+  },
+};
 export const mutations = {
   saveData(state, data) {
-    let request = JSON.stringify(data);
-    console.log(request);
+    for (let keys in data) {
+      data[keys].forEach((item) => state.dataGallery.push(item));
+    }
+  },
 
-    let final = JSON.parse(request);
-    console.log(final);
+  setActiveSlide(state, slideNumber) {
+    state.activeSlide = state.dataGallery[slideNumber];
+  },
+
+  resetActiveSlide(state) {
+    state.activeSlide = null;
   },
 };
 
 export const actions = {
-  // async getData({ state, commit }) {
-  //   const request = await this.$axios.$get(
-  //     "https://dev.rusdat.net/mock/example.json"
-  //   );
-  //   commit("saveData", request);
-  // },
+  async getData({ commit }) {
+    const request = await this.$axios.$get(
+      "https://dev.rusdat.net/mock/example.json"
+    );
+    commit("saveData", request);
+  },
 };
